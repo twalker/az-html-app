@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+  - 12
+# TODO: build html
+# zip html
+#
+script:
+  - CI=true npm test

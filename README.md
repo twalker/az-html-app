@@ -80,3 +80,25 @@ Deployment endpoint responded with status code 202
 ```
 az group delete --name "rg-az-html-app"
 ```
+
+### Creating jenkins service principle
+
+╰─➤  az ad sp create-for-rbac --name local-jenkins-service-principal
+Changing "local-jenkins-service-principal" to a valid URI of "http://local-jenkins-service-principal", which is the required format used for service principal names
+Creating a role assignment under the scope of "/subscriptions/a67f9a16-b22e-48dc-8516-015e88ef709e"
+  Retrying role assignment creation: 1/36
+  Retrying role assignment creation: 2/36
+{
+  "appId": "70d862c5-e74d-4162-8df3-d66d6eb2fbc6",
+  "displayName": "local-jenkins-service-principal",
+  "name": "http://local-jenkins-service-principal",
+  "password": "REDACTED",
+  "tenant": "ffe8f317-d65f-4b00-ad3b-4982fc85ae02"
+}
+
+az role assignment list --assignee APP_ID
+az role assignment create --assignee APP_ID --role Contributor
+
+az login --service-principal --username APP_ID --password PASSWORD --tenant TENANT_ID
+
+az login --service-principal --username 70d862c5-e74d-4162-8df3-d66d6eb2fbc6 --password 61ddaefd-a86b-4315-90e2-c2a3b663a4ce --tenant ffe8f317-d65f-4b00-ad3b-4982fc85ae02
