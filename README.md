@@ -41,6 +41,7 @@ az webapp deployment source config-zip \
 Zip deploy:
 https://docs.microsoft.com/en-us/azure/app-service/deploy-zip#deploy-zip-file-with-azure-cli
 ```
+# optional `--slot <slotname`
 az webapp deployment source config-zip  -g <resource-group>  -n <appname>  --src <filepath>.zip
 ```
 
