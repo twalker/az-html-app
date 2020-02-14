@@ -9,7 +9,16 @@
       "value": "Standard_LRS"
     },
     "appServicePlanName": {
-      "value": "devplan"
+      "value": "s1plan"
+    },
+    "appServiceSKU": {
+      "value": {
+        "name": "S1",
+        "tier": "Standard",
+        "size": "S1",
+        "family": "S",
+        "capacity": 1
+      }
     },
     "webAppName": {
       "value": "tw2k-html-app"

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "storagePrefix": {
@@ -21,6 +21,16 @@
         "Standard_RAGZRS"
       ]
     },
+    "environments": {
+      "defaultValue": [
+        "staging"
+      ],
+      "type": "array",
+      "metadata": {
+        "description": "Array with the names for the environment slots"
+      },
+      "maxLength": 19
+    },
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]"
@@ -28,6 +38,16 @@
     "appServicePlanName": {
       "type": "string",
       "defaultValue": "exampleplan"
+    },
+    "appServiceSKU": {
+      "type": "object",
+      "defaultValue": {
+        "name": "B1",
+        "tier": "Basic",
+        "size": "B1",
+        "family": "B",
+        "capacity": 1
+      }
     },
     "webAppName": {
       "type": "string",
@@ -52,8 +72,7 @@
     }
   },
   "variables": {
-    "uniqueStorageName": "[concat(parameters('storagePrefix'), uniqueString(resourceGroup().id))]",
-    "webAppPortalName": "[concat(parameters('webAppName'), uniqueString(resourceGroup().id))]"
+    "uniqueStorageName": "[concat(parameters('storagePrefix'), uniqueString(resourceGroup().id))]"
   },
   "resources": [{
       "type": "Microsoft.Storage/storageAccounts",
@@ -75,13 +94,7 @@
       "name": "[parameters('appServicePlanName')]",
       "location": "[parameters('location')]",
       "tags": "[parameters('resourceTags')]",
-      "sku": {
-        "name": "B1",
-        "tier": "Basic",
-        "size": "B1",
-        "family": "B",
-        "capacity": 1
-      },
+      "sku": "[parameters('appServiceSKU')]",
       "kind": "linux",
       "properties": {
         "perSiteScaling": false,
@@ -105,6 +118,27 @@
         "siteConfig": {
           "linuxFxVersion": "[parameters('linuxFxVersion')]"
         }
+      }
+    },
+    {
+      "apiVersion": "2016-08-01",
+      "type": "Microsoft.Web/sites/slots",
+      "name": "[concat(parameters('webAppName'), '/', parameters('environments')[copyIndex()])]",
+      "kind": "app",
+      "location": "[parameters('location')]",
+      "comments": "This specifies the web app slots.",
+      "tags": {
+        "displayName": "WebAppSlots"
+      },
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/Sites', parameters('webAppName'))]"
+      ],
+      "copy": {
+        "name": "webPortalSlot",
+        "count": "[length(parameters('environments'))]"
       }
     }
   ],
