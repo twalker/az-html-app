@@ -7,15 +7,15 @@ pipeline {
 
    stages {
       stage('Hello') {
-         steps {
-            echo 'Hello World'
-            echo sh('pwd')
-         }
+        steps {
+          echo 'Hello World'
+          echo sh('pwd')
+        }
       }
-      stage('Build') {
+
+      stage('Test') {
          steps {
-            echo 'Node version'
-            echo sh('node --version')
+            sh('npm test')
          }
       }
    }
