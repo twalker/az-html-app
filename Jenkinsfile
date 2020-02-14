@@ -12,8 +12,9 @@ pipeline {
             echo sh('pwd')
          }
       }
-      stage('Version') {
+      stage('Build') {
          steps {
+            echo 'Hello World'
             echo sh('node --version')
          }
       }
