@@ -6,16 +6,28 @@ pipeline {
    }
 
    stages {
-      stage('Hello') {
+      stage('Environment') {
         steps {
-          echo 'Hello World'
-          echo sh('pwd')
+          echo sh('node --version')
+        }
+      }
+      stage('Install') {
+        steps {
+         sh 'npm install --production'
         }
       }
 
-      stage('Test') {
+      stage('Build') {
          steps {
-            sh('npm test')
+          sh 'npm run build'
+         }
+      }
+      stage('CreateDeployment') {
+         steps {
+          //zip zipFile: 'built-html.zip', archive: true, dir: '../' // works
+          // Create a zip file of content in the workspace
+          zip dir: "${workspace}/build", zipFile: "built-html-${env.BUILD_ID}.zip", archive: true
+          // archiveArtifacts artifacts: "built-html-${env.BUILD_ID}.zip", fingerprint: true
          }
       }
    }
