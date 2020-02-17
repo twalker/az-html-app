@@ -22,12 +22,6 @@
     },
     "webAppName": {
       "value": "tw2k-html-app"
-    },
-    "resourceTags": {
-      "value": {
-        "Environment": "Dev",
-        "Project": "Tutorial"
-      }
     }
   }
 }
